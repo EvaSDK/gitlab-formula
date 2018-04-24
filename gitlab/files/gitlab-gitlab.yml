@@ -163,18 +163,57 @@ production: &base
     enabled: true
     # The location where build artifacts are stored (default: shared/artifacts).
     # path: shared/artifacts
+    # object_store:
+    #   enabled: false
+    #   remote_directory: artifacts # The bucket name
+    #   background_upload: false # Temporary option to limit automatic upload (Default: true)
+    #   proxy_download: false # Passthrough all downloads via GitLab instead of using Redirects to Object Storage
+    #   connection:
+    #     provider: AWS # Only AWS supported at the moment
+    #     aws_access_key_id: AWS_ACCESS_KEY_ID
+    #     aws_secret_access_key: AWS_SECRET_ACCESS_KEY
+    #     region: us-east-1
 
   ## Git LFS
   lfs:
     enabled: true
     # The location where LFS objects are stored (default: shared/lfs-objects).
     # storage_path: shared/lfs-objects
+    object_store:
+      enabled: false
+      remote_directory: lfs-objects # Bucket name
+      # direct_upload: false # Use Object Storage directly for uploads instead of background uploads if enabled (Default: false)
+      # background_upload: false # Temporary option to limit automatic upload (Default: true)
+      # proxy_download: false # Passthrough all downloads via GitLab instead of using Redirects to Object Storage
+      connection:
+        provider: AWS
+        aws_access_key_id: AWS_ACCESS_KEY_ID
+        aws_secret_access_key: AWS_SECRET_ACCESS_KEY
+        region: us-east-1
+        # Use the following options to configure an AWS compatible host
+        # host: 'localhost' # default: s3.amazonaws.com
+        # endpoint: 'http://127.0.0.1:9000' # default: nil
+        # path_style: true # Use 'host/bucket_name/object' instead of 'bucket_name.host/object'
 
   ## Uploads (attachments, avatars, etc...)
   uploads:
     # The location where uploads objects are stored (default: public/).
     # storage_path: public/
     # base_dir: uploads/-/system
+    object_store:
+      enabled: false
+      # remote_directory: uploads # Bucket name
+      # direct_upload: false # Use Object Storage directly for uploads instead of background uploads if enabled (Default: false)
+      # background_upload: false # Temporary option to limit automatic upload (Default: true)
+      # proxy_download: false # Passthrough all downloads via GitLab instead of using Redirects to Object Storage
+    connection:
+      provider: AWS
+      aws_access_key_id: AWS_ACCESS_KEY_ID
+      aws_secret_access_key: AWS_SECRET_ACCESS_KEY
+      region: us-east-1
+      # host: 'localhost' # default: s3.amazonaws.com
+      # endpoint: 'http://127.0.0.1:9000' # default: nil
+      # path_style: true # Use 'host/bucket_name/object' instead of 'bucket_name.host/object'
 
   ## GitLab Pages
   pages:
@@ -206,6 +245,10 @@ production: &base
     # Gravatar/Libravatar URLs: possible placeholders: %{hash} %{size} %{email} %{username}
     # plain_url: "http://..."     # default: https://www.gravatar.com/avatar/%{hash}?s=%{size}&d=identicon
     # ssl_url:   "https://..."    # default: https://secure.gravatar.com/avatar/%{hash}?s=%{size}&d=identicon
+
+  ## Sidekiq
+  sidekiq:
+    log_format: default # (json is also supported)
 
   ## Auxiliary jobs
   # Periodically executed jobs, to self-heal GitLab, do external synchronizations, etc.
